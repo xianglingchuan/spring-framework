@@ -7,6 +7,7 @@ dependencies {
 	api(project(":spring-aop"))
 	api(project(":spring-beans"))
 	api(project(":spring-core"))
+	api(project(":spring-jcl"))
 	api(project(":spring-expression"))
 	optional(project(":spring-instrument"))
 	optional("javax.annotation:javax.annotation-api")

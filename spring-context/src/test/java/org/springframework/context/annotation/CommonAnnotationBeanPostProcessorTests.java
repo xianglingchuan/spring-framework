@@ -49,6 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Juergen Hoeller
  * @author Chris Beams
+ *
  */
 public class CommonAnnotationBeanPostProcessorTests {
 

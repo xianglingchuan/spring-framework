@@ -134,6 +134,7 @@ public abstract class AbstractAopProxyTests {
 
 	/**
 	 * Simple test that if we set values we can get them out again.
+	 * 简单的测试，如果我们设置值，我们可以再次得到它们。
 	 */
 	@Test
 	public void testValuesStick() {

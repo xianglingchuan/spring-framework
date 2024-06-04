@@ -16,12 +16,12 @@
 
 package org.springframework.core;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 import kotlin.Unit;
+import kotlin.coroutines.Continuation;
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KClassifier;
 import kotlin.reflect.KFunction;
@@ -51,17 +51,22 @@ public abstract class CoroutinesUtils {
 
 	/**
 	 * Convert a {@link Deferred} instance to a {@link Mono}.
+	 * 将{@link Deferred}实例转换为{@link Mono}。
 	 */
+
+	@SuppressWarnings("unchecked")
 	public static <T> Mono<T> deferredToMono(Deferred<T> source) {
-		return MonoKt.mono(Dispatchers.getUnconfined(),
-				(scope, continuation) -> source.await(continuation));
+		return (Mono<T>) MonoKt.mono(Dispatchers.getUnconfined(),
+				(scope, continuation) -> source.await((Continuation<? super T>) continuation));
 	}
 
 	/**
 	 * Convert a {@link Mono} instance to a {@link Deferred}.
+	 * 将{@link Mono}实例转换为{@link Deferred}实例。
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> Deferred<T> monoToDeferred(Mono<T> source) {
-		return BuildersKt.async(GlobalScope.INSTANCE, Dispatchers.getUnconfined(),
+		return (Deferred<T>) BuildersKt.async(GlobalScope.INSTANCE, Dispatchers.getUnconfined(),
 				CoroutineStart.DEFAULT,
 				(scope, continuation) -> MonoKt.awaitSingleOrNull(source, continuation));
 	}
