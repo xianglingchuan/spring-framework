@@ -16,6 +16,7 @@
 
 package org.springframework.core;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -69,11 +70,20 @@ public abstract class CoroutinesUtils {
 	 * Invoke a suspending function and converts it to {@link Mono} or
 	 * {@link Flux}.
 	 */
+	@SuppressWarnings("deprecation") //添加去掉了"method.isAccessible()"获错警告信息
+	//它可以用于抑制编译器产生的某些类型的警告，使得代码在编译时不会因为注解所指定的警告类型而显示警告信息。
+	//抑制单类型的警告，如@SuppressWarnings("unchecked")用于抑制未检查的转换警告。
+	//抑制多类型的警告，如@SuppressWarnings(value={"unchecked", "rawtypes"})用于同时抑制未检查的转换和未指定泛型的警告。
+	//抑制所有类型的警告，如@SuppressWarnings("all")用于屏蔽所有类型的警告。
 	public static Publisher<?> invokeSuspendingFunction(Method method, Object target, Object... args) {
 		KFunction<?> function = Objects.requireNonNull(ReflectJvmMapping.getKotlinFunction(method));
+
+		//报错 警告: [deprecation] AccessibleObject中的isAccessible()已过时 if (method.isAccessible() && !KCallablesJvm.isAccessible(function)) {
 		if (method.isAccessible() && !KCallablesJvm.isAccessible(function)) {
 			KCallablesJvm.setAccessible(function, true);
 		}
+
+
 		KClassifier classifier = function.getReturnType().getClassifier();
 		Mono<Object> mono = MonoKt.mono(Dispatchers.getUnconfined(), (scope, continuation) ->
 					KCallables.callSuspend(function, getSuspendedFunctionArgs(target, args), continuation))

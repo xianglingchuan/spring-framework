@@ -76,10 +76,14 @@ public abstract class AbstractApplicationContextTests extends AbstractListableBe
 	 * Must register standard beans.
 	 * Parent must register rod with name Roderick
 	 * and father with name Albert.
+	 * 必须注册一个TestListener。
+	 * 必须注册标准bean。
+	 * 家长必须以Roderick的名字注册他的父亲叫艾伯特。
 	 */
 	protected abstract ConfigurableApplicationContext createContext() throws Exception;
 
 	@Test
+	@SuppressWarnings("deprecation")
 	public void contextAwareSingletonWasCalledBack() throws Exception {
 		ACATester aca = (ACATester) applicationContext.getBean("aca");
 		assertThat(aca.getApplicationContext() == applicationContext).as("has had context set").isTrue();
@@ -194,7 +198,6 @@ public abstract class AbstractApplicationContextTests extends AbstractListableBe
 
 	@SuppressWarnings("serial")
 	public static class MyEvent extends ApplicationEvent {
-
 		public MyEvent(Object source) {
 			super(source);
 		}
